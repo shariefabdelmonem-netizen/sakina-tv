@@ -12,6 +12,7 @@ for ns in system secure global; do adb -s "$D" shell settings list $ns > "$OUT/s
 cat > "$OUT/restore.sh" <<R
 #!/bin/bash
 # Turns back on every app this setup disabled.
+[ -f ~/sakina-tv/env.sh ] && . ~/sakina-tv/env.sh
 while read -r p; do [ -n "\$p" ] && adb -s "$D" shell pm enable --user 0 "\$p"; done < "$OUT/disabled-by-us.txt"
 R
 chmod +x "$OUT/restore.sh"

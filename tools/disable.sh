@@ -10,4 +10,6 @@ for p in "$@"; do
     echo "⚠️ $p (not changed)"
   fi
 done
-ping -c 2 -t 3 "$IP" >/dev/null && echo "TV is answering" || echo "⛔ TV stopped answering - run $OUT/restore.sh"
+# Asking adb, not ping: ping's flags differ between Mac and Windows, and adb answering is what matters here.
+if [ "$(adb -s "$D" shell echo ok 2>/dev/null | tr -d '\r')" = ok ]; then echo "TV is answering"
+else echo "⛔ TV stopped answering - run $OUT/restore.sh"; fi
