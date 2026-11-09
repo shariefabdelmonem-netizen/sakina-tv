@@ -1,4 +1,4 @@
-package app.noortv;
+package app.sakinatv;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +14,11 @@ public class MainActivity extends Activity {
             Reminder.schedule(this);
             Adhan.schedule(this);
             MessageServer.start(this);
+        }
+        if (!BuildConfig.STREAM.isEmpty()) {
+            startActivity(new Intent(this, RadioActivity.class));
+            finish();
+            return;
         }
         Uri video = Uri.parse("https://www.youtube.com/watch?v=" + BuildConfig.VIDEO);
         Intent yt = new Intent(Intent.ACTION_VIEW, video).setPackage("com.google.android.youtube.tv");

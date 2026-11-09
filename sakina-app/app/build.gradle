@@ -1,7 +1,7 @@
 plugins { id 'com.android.application' }
 
 android {
-    namespace 'app.noortv'
+    namespace 'app.sakinatv'
     compileSdk 34
 
     defaultConfig {
@@ -9,9 +9,12 @@ android {
         targetSdk 34
         versionCode 5
         versionName '1.0'
-        buildConfigField 'double', 'LAT', project.property('noor.lat')
-        buildConfigField 'double', 'LON', project.property('noor.lon')
-        buildConfigField 'int', 'METHOD', project.property('noor.method')
+        buildConfigField 'double', 'LAT', project.property('sakina.lat')
+        buildConfigField 'double', 'LON', project.property('sakina.lon')
+        buildConfigField 'int', 'METHOD', project.property('sakina.method')
+        // A radio shortcut sets STREAM; the others open VIDEO on YouTube.
+        buildConfigField 'String', 'STREAM', '""'
+        buildConfigField 'String', 'STREAM_PLACE', '""'
     }
 
     // One small app per shortcut, so each gets its own tile on the home screen.
@@ -19,37 +22,46 @@ android {
     productFlavors {
         kahf {
             dimension 'item'
-            applicationId 'app.noortv.kahf'
+            applicationId 'app.sakinatv.kahf'
             resValue 'string', 'app_name', 'سورة الكهف'
             buildConfigField 'String', 'VIDEO', '"9k1U0aGQRNA"'
             buildConfigField 'boolean', 'REMINDERS', 'true'
         }
         baqara {
             dimension 'item'
-            applicationId 'app.noortv.baqara'
+            applicationId 'app.sakinatv.baqara'
             resValue 'string', 'app_name', 'سورة البقرة'
-            buildConfigField 'String', 'VIDEO', '"9HW7j9lZZTU"'
+            buildConfigField 'String', 'VIDEO', '"fpXW6nZC7WE"' // محمد صديق المنشاوي، القناة الرسمية
             buildConfigField 'boolean', 'REMINDERS', 'false'
         }
         sabah {
             dimension 'item'
-            applicationId 'app.noortv.sabah'
+            applicationId 'app.sakinatv.sabah'
             resValue 'string', 'app_name', 'أذكار الصباح'
             buildConfigField 'String', 'VIDEO', '"fD4uDIoCn3M"'
             buildConfigField 'boolean', 'REMINDERS', 'false'
         }
         masa {
             dimension 'item'
-            applicationId 'app.noortv.masa'
+            applicationId 'app.sakinatv.masa'
             resValue 'string', 'app_name', 'أذكار المساء'
             buildConfigField 'String', 'VIDEO', '"rQnNno3Do60"'
             buildConfigField 'boolean', 'REMINDERS', 'false'
         }
         ruqya {
             dimension 'item'
-            applicationId 'app.noortv.ruqya'
+            applicationId 'app.sakinatv.ruqya'
             resValue 'string', 'app_name', 'الرقية الشرعية'
             buildConfigField 'String', 'VIDEO', '"BVtCjMyJ320"'
+            buildConfigField 'boolean', 'REMINDERS', 'false'
+        }
+        radio {
+            dimension 'item'
+            applicationId 'app.sakinatv.radio'
+            resValue 'string', 'app_name', 'إذاعة القرآن الكريم'
+            buildConfigField 'String', 'VIDEO', '""'
+            buildConfigField 'String', 'STREAM', '"https://stream.radiojar.com/8s5u5tpdtwzuv|https://radio.xecod.com/station/quran-cairo"'
+            buildConfigField 'String', 'STREAM_PLACE', '"من القاهرة"'
             buildConfigField 'boolean', 'REMINDERS', 'false'
         }
     }

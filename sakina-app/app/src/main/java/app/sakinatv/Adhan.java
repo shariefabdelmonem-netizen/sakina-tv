@@ -1,4 +1,4 @@
-package app.noortv;
+package app.sakinatv;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -38,7 +38,7 @@ import java.util.Locale;
  * cut off. Fajr is banner only: most adhan recordings lack «الصلاة خير من النوم». Only the Kahf shortcut runs it.
  */
 public class Adhan extends BroadcastReceiver {
-    static final String FIRE = "app.noortv.ADHAN";
+    static final String FIRE = "app.sakinatv.ADHAN";
     static final double LAT = BuildConfig.LAT, LON = BuildConfig.LON;
     static final String HOME = "com.gathin.tvhome";
     private static final String[] KEYS = {"Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"};
@@ -79,7 +79,7 @@ public class Adhan extends BroadcastReceiver {
         c.getSystemService(AlarmManager.class).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, when, pi);
     }
 
-    /** "HH:mm" for Fajr..Isha on that day, from Aladhan (noor.method), cached per day for offline days. */
+    /** "HH:mm" for Fajr..Isha on that day, from Aladhan (sakina.method), cached per day for offline days. */
     private static String[] times(Context c, Calendar day) {
         String date = String.format(Locale.US, "%02d-%02d-%d", day.get(Calendar.DAY_OF_MONTH),
                 day.get(Calendar.MONTH) + 1, day.get(Calendar.YEAR));

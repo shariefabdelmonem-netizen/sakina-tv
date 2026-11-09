@@ -1,4 +1,4 @@
-package app.noortv;
+package app.sakinatv;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

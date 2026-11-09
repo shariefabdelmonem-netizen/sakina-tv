@@ -1,7 +1,7 @@
-noor-app/build/
-noor-app/app/build/
-noor-app/.gradle/
-noor-app/local.properties
-noor-app/app/src/kahf/res/raw/
+sakina-app/build/
+sakina-app/app/build/
+sakina-app/.gradle/
+sakina-app/local.properties
+sakina-app/app/src/kahf/res/raw/
 *.apk
 .DS_Store

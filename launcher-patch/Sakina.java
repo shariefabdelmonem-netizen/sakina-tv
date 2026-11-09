@@ -16,7 +16,7 @@ import java.util.Locale;
  * prayer. Weather and prayer times come from Open-Meteo and Aladhan in the background; until they arrive the line
  * shows the Hijri date alone. Read once a minute with the clock.
  */
-final class Noor {
+final class Sakina {
     static final double LAT = @LAT@, LON = @LON@;
     static final int METHOD = @METHOD@; // Aladhan calculation method
 
@@ -33,7 +33,7 @@ final class Noor {
     private static volatile String hijri; // "19 جمادى الأولى 1448" from Aladhan, for the local calendar
     private static volatile int hijriDayAladhan = -1;
 
-    private Noor() {
+    private Sakina() {
     }
 
     static int hijriDay() {
@@ -103,7 +103,7 @@ final class Noor {
             } finally {
                 fetching = false;
             }
-        }, "noor").start();
+        }, "sakina").start();
     }
 
     private static void loadPrayers(int today) {

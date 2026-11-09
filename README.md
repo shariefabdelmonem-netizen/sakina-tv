@@ -1,6 +1,6 @@
 <div dir="rtl" align="center">
 
-# 📺 نور تي في
+# 📺 سكينة TV
 
 ### نظّف تلفزيونك من الإعلانات، وخلّه يأذّن ويذكّرك بالصلاة
 
@@ -11,7 +11,7 @@
 ![Claude Code](https://img.shields.io/badge/Claude_Code-ready-D97757?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
-![نور تي في على تلفزيون حقيقي](docs/demo.gif)
+![سكينة TV على تلفزيون حقيقي](docs/demo.gif)
 
 **[⬇️ ابدأ الحين، 3 خطوات بس](#start)**
 
@@ -85,7 +85,7 @@
 **1. افتح كلود كود والصق هالسطر:**
 
 ```
-نظّف تلفزيوني بـ github.com/majedphotos/noor-tv واقرا skills/noor-tv/SKILL.md وامشِ عليه خطوة خطوة
+نظّف تلفزيوني بـ github.com/shariefabdelmonem-netizen/sakina-tv واقرا skills/sakina-tv/SKILL.md وامشِ عليه خطوة خطوة
 ```
 
 **2. سوّ اللي يقول لك.** خطوة وحدة بكل مرة. الشي الوحيد اللي تسويه بإيدك: تضغط 7 مرات بإعدادات التلفزيون عشان تفعّل «خيارات المطوّر»، وكلود يقول لك وين بالضبط.
@@ -96,8 +96,8 @@
 <summary>تبيه كبلقن بكلود كود؟</summary>
 
 ```
-/plugin marketplace add majedphotos/noor-tv
-/plugin install noor-tv@noor-tv
+/plugin marketplace add shariefabdelmonem-netizen/sakina-tv
+/plugin install sakina-tv@sakina-tv
 ```
 
 بعدها قول لكلود: «نظّف تلفزيوني».

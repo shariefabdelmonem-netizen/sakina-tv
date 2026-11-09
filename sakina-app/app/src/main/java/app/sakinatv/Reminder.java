@@ -1,4 +1,4 @@
-package app.noortv;
+package app.sakinatv;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -24,7 +24,7 @@ import java.util.Calendar;
  * before maghrib the Surat Al-Kahf reminder first and the salawat line right after it. Only the Kahf shortcut schedules it.
  */
 public class Reminder extends BroadcastReceiver {
-    static final String SHOW = "app.noortv.SHOW";
+    static final String SHOW = "app.sakinatv.SHOW";
     static final long EVERY = 45 * 60 * 1000L;
     static final long SHOWN = 10_000;
 

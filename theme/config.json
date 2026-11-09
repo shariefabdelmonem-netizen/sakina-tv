@@ -1,5 +1,5 @@
 {
-  "dock_apps": ["app.noortv.kahf", "app.noortv.baqara", "app.noortv.sabah", "app.noortv.masa", "app.noortv.ruqya",
+  "dock_apps": ["app.sakinatv.kahf", "app.sakinatv.baqara", "app.sakinatv.radio", "app.sakinatv.sabah", "app.sakinatv.masa", "app.sakinatv.ruqya",
                 "com.majnioui.tv.prayer", "com.netflix.ninja", "com.google.android.youtube.tv"],
   "shamsi_date": true,
   "wallpaper": false,

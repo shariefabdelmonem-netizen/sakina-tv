@@ -1,7 +1,7 @@
 {
-  "name": "noor-tv",
-  "owner": { "name": "majedphotos" },
+  "name": "sakina-tv",
+  "owner": { "name": "shariefabdelmonem-netizen" },
   "plugins": [
-    { "name": "noor-tv", "source": "./", "description": "نظّف تلفزيونك وخلّه يأذّن ويذكّرك بالصلاة", "version": "1.1.2" }
+    { "name": "sakina-tv", "source": "./", "description": "نظّف تلفزيونك وخلّه يأذّن ويذكّرك بالصلاة", "version": "1.1.2" }
   ]
 }
