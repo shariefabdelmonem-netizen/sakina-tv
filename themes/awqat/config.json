@@ -4,7 +4,9 @@
   "wallpaper_rotation_minutes": 30,
   "wallpaper_moods": {
     "morning": [
-      "morning.jpg"
+      "morning-1.jpg",
+      "morning-2.jpg",
+      "morning-3.jpg"
     ],
     "evening": [
       "evening.jpg"
