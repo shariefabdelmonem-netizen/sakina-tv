@@ -45,6 +45,9 @@ public class Reminder extends BroadcastReceiver {
             MessageServer.start(c);
             return;
         }
+        // Every 45 minutes, set the next adhan again: if the TV booted before the Wi-Fi was up, the prayer
+        // times could not load then, and this retries them instead of waiting for the next reboot.
+        Adhan.schedule(c);
         if (!Settings.canDrawOverlays(c)) return;
         Calendar now = Calendar.getInstance();
         boolean friday = now.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY && now.get(Calendar.HOUR_OF_DAY) < 17;

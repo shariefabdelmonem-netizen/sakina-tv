@@ -104,7 +104,7 @@ description: سكينة TV — ينظّف تلفزيون أندرويد تي ف�
 - `yt-dlp --flat-playlist --print "%(id)s | %(duration_string)s | %(channel)s | %(title)s" "ytsearch10:أذان <الاسم>"`. فضّل **القناة الرسمية** للمؤذن، وأذان كامل **3-4 دقايق**، مش ساعات متكررة. قوله اخترت إيه ومنين.
 - `bash ~/sakina-tv/app/tools/fetch-adhan.sh "https://www.youtube.com/watch?v=<id>"`
 - عدّل `sakina.lat`، `sakina.lon`، `sakina.method` في `~/sakina-tv/app/sakina-app/gradle.properties`.
-- استأذن، واشرح الكروت: الكهف، البقرة، أذكار الصباح، أذكار المساء، الرقية، ومعاهم الأذان و«صلّ على النبي ﷺ» وصفحة الجوال.
+- استأذن، واشرح الكروت: الكهف، البقرة، أذكار الصباح، أذكار المساء، الرقية، وإذاعة القرآن الكريم من القاهرة، ومعاهم الأذان و«صلّ على النبي ﷺ» وصفحة الجوال.
 - `. ~/sakina-tv/env.sh && bash ~/sakina-tv/app/tools/install-sakina.sh <ip>`
 - Home ← `shot.sh`، واتأكد إن الكروت ظاهرة وإن السطر اللي جنب الساعة فيه الهجري والجو والصلاة الجاية. اتأكد إن «الصلاة الجاية» منطقية مع الساعة.
 

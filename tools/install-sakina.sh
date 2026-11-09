@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds the five shortcut apps (Kahf, Baqarah, morning and evening adhkar, ruqyah) and installs them on the TV.
+# Builds the six shortcut apps (Kahf, Baqarah, morning and evening adhkar, ruqyah, Quran radio) and installs them on the TV.
 # The Kahf app also carries the reminders, the adhan and the phone message page, so it gets the overlay
 # and usage-access permissions and is started once.
 # Usage: tools/install-sakina.sh <tv-ip>
