@@ -229,7 +229,11 @@ public class MessageServer extends Service {
         v.setLineSpacing(8, 1f);
         v.setMaxWidth(1500);
         v.setPadding(0, 18, 0, 0);
-        card.addView(v);
+        // Full card width, and the card at least 1000px wide: this TV measures some emoji (a trailing 🌙)
+        // narrower than it draws them, so a text sized to its own measure wrapped the emoji onto a line of its own.
+        card.addView(v, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        card.setMinimumWidth(1000);
 
         if (!name.isEmpty()) {
             TextView from = new TextView(this);

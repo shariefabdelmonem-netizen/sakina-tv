@@ -2,7 +2,7 @@
   "wallpaper_true_color": true,
   "wallpaper": true,
   "wallpaper_rotation_minutes": 0,
-  "wallpaper_dim": 0,
+  "wallpaper_dim": 30,
   "background_color": "#04170f",
   "dock_opacity": 70,
   "glass_style": "rim",

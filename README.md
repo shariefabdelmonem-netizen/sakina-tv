@@ -123,6 +123,8 @@
 
 ## شكر
 
+🤍 **شكر خاص لـ [majedphotos](https://github.com/majedphotos):** سكينة TV اتعملت من وحي ريبو [Noor TV](https://github.com/majedphotos/noor-tv) بتاعه، ومنه بدأت الفكرة والشغل. جزاه الله خير.
+
 مبني على [CleanYourTV](https://github.com/Gathin23/cleanyourtv) (رخصة MIT) ✨.
 مواقيت الصلاة والتاريخ الهجري من [Aladhan](https://aladhan.com)، والجو من [Open-Meteo](https://open-meteo.com).
 

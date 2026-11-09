@@ -2,7 +2,7 @@
   "wallpaper_true_color": true,
   "wallpaper": true,
   "wallpaper_rotation_minutes": 0,
-  "wallpaper_dim": 0,
+  "wallpaper_dim": 35,
   "background_color": "#040a1c",
   "dock_band": false,
   "top_menu": true,
