@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -17,6 +16,7 @@ import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
@@ -34,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 public class MessageServer extends Service {
     static final int PORT = 8080;
     static final int MAX = 200;
+    static final int NAME_MAX = 20;
     static final long DRAW_IDLE = 15_000;
 
     private final Handler main = new Handler(Looper.getMainLooper());
@@ -92,16 +93,20 @@ public class MessageServer extends Service {
         String head = readHead(in);
         String first = head.split("\r\n", 2)[0];
         if (!first.startsWith("POST ")) {
-            reply(s.getOutputStream(), "text/html", PAGE);
+            reply(s.getOutputStream(), "text/html", page());
             return;
         }
         String body = readBody(in, head);
         if (first.startsWith("POST /send")) {
-            String text = body.trim();
+            // "name\ntext": the name is optional and may be empty.
+            int nl = body.indexOf('\n');
+            String name = nl < 0 ? "" : body.substring(0, nl).trim();
+            String text = (nl < 0 ? body : body.substring(nl + 1)).trim();
+            if (name.length() > NAME_MAX) name = name.substring(0, NAME_MAX);
             if (text.length() > MAX) text = text.substring(0, MAX);
             if (!text.isEmpty()) {
-                String t = text;
-                main.post(() -> show(t));
+                String t = text, n = name;
+                main.post(() -> show(t, n));
             }
         } else if (first.startsWith("POST /draw")) {
             String segs = body;
@@ -188,7 +193,7 @@ public class MessageServer extends Service {
         }).start();
     }
 
-    private void show(String text) {
+    private void show(String text, String name) {
         if (!Settings.canDrawOverlays(this)) return;
         WindowManager wm = getSystemService(WindowManager.class);
         if (shown != null) {
@@ -197,77 +202,80 @@ public class MessageServer extends Service {
             } catch (Exception ignored) {
             }
         }
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setGravity(Gravity.CENTER_HORIZONTAL);
+        card.setPadding(90, 44, 90, 48);
+        GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{0xF0163A2C, 0xF00B1F18});
+        bg.setCornerRadius(56);
+        bg.setStroke(4, 0xCCE0B45A);
+        card.setBackground(bg);
+        card.setElevation(24);
+
+        TextView top = new TextView(this);
+        top.setText("💌 رسالة من الموبايل");
+        top.setTextColor(0xFFE0B45A);
+        top.setTextSize(22);
+        top.setGravity(Gravity.CENTER);
+        card.addView(top);
+
         TextView v = new TextView(this);
         v.setText(text);
-        v.setTextColor(Color.WHITE);
-        v.setTextSize(54);
+        v.setTextColor(0xFFF4EFE3);
+        v.setTextSize(text.length() > 80 ? 40 : 56);
         v.setTypeface(Typeface.DEFAULT_BOLD);
         v.setGravity(Gravity.CENTER);
-        v.setPadding(80, 50, 80, 50);
+        v.setLineSpacing(8, 1f);
         v.setMaxWidth(1500);
-        GradientDrawable bg = new GradientDrawable();
-        bg.setColor(0xD9101418);
-        bg.setCornerRadius(48);
-        bg.setStroke(3, 0x66FFFFFF);
-        v.setBackground(bg);
-        v.setAlpha(0f);
+        v.setPadding(0, 18, 0, 0);
+        card.addView(v);
+
+        if (!name.isEmpty()) {
+            TextView from = new TextView(this);
+            from.setText("— من " + name);
+            from.setTextColor(0xCCF4EFE3);
+            from.setTextSize(24);
+            from.setGravity(Gravity.CENTER);
+            from.setPadding(0, 20, 0, 0);
+            card.addView(from);
+        }
+
+        card.setAlpha(0f);
+        card.setScaleX(0.92f);
+        card.setScaleY(0.92f);
         WindowManager.LayoutParams lp = overlay(WindowManager.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         try {
-            wm.addView(v, lp);
+            wm.addView(card, lp);
         } catch (Exception e) {
             return;
         }
-        shown = v;
-        v.animate().alpha(1f).setDuration(400).start();
-        main.postDelayed(() -> v.animate().alpha(0f).setDuration(600).withEndAction(() -> {
+        shown = card;
+        card.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(450).start();
+        main.postDelayed(() -> card.animate().alpha(0f).setDuration(600).withEndAction(() -> {
             try {
-                wm.removeView(v);
+                wm.removeView(card);
             } catch (Exception ignored) {
             }
-            if (shown == v) shown = null;
+            if (shown == card) shown = null;
         }).start(), 20_000);
     }
 
-    private static final String PAGE = "<!doctype html><html dir=rtl lang=ar><head><meta charset=utf-8>"
-            + "<meta name=viewport content='width=device-width,initial-scale=1,user-scalable=no'><title>رسالة للتلفزيون</title><style>"
-            + "body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;"
-            + "background:#0f1a17;font-family:-apple-system,system-ui,sans-serif;color:#fff}"
-            + ".c{width:min(94vw,560px)}h1{font-size:24px;margin:0 0 14px}"
-            + ".tabs{display:flex;gap:8px;margin-bottom:12px}.tabs button{flex:1;margin:0;background:#16241f;border:1px solid #2f4a42}"
-            + ".tabs button.on{background:#1f6f50;border-color:#1f6f50}"
-            + "textarea{width:100%;box-sizing:border-box;height:140px;font-size:22px;padding:14px;border-radius:16px;"
-            + "border:1px solid #2f4a42;background:#16241f;color:#fff;resize:none}"
-            + "canvas{width:100%;aspect-ratio:16/9;background:#16241f;border-radius:16px;border:1px solid #2f4a42;touch-action:none;display:block}"
-            + ".row{display:flex;gap:10px;margin-top:12px;align-items:center}.dot{width:38px;height:38px;border-radius:50%;border:3px solid transparent}"
-            + ".dot.on{border-color:#fff}"
-            + "button{margin-top:14px;width:100%;padding:16px;font-size:20px;font-weight:700;border:0;border-radius:16px;"
-            + "background:#1f6f50;color:#fff}.row button{margin:0;width:auto;flex:1;background:#3a2a2a}"
-            + "p{opacity:.7;text-align:center;min-height:1.4em}.hide{display:none}</style></head><body>"
-            + "<div class=c><h1>📺 للتلفزيون</h1>"
-            + "<div class=tabs><button id=bw class=on onclick=tab(0)>✍️ اكتب</button><button id=bd onclick=tab(1)>🎨 ارسم</button></div>"
-            + "<div id=w><textarea id=t maxlength=200 placeholder='اكتب هني...'></textarea><button onclick=send()>أرسل</button></div>"
-            + "<div id=d class=hide><canvas id=cv></canvas><div class=row id=colors></div>"
-            + "<div class=row><button onclick=clr()>امسح</button></div></div>"
-            + "<p id=s></p></div><script>"
-            + "function $(i){return document.getElementById(i)}"
-            + "function tab(n){$('w').className=n?'hide':'';$('d').className=n?'':'hide';$('bw').className=n?'':'on';$('bd').className=n?'on':'';if(n)fit()}"
-            + "function send(){var t=$('t');if(!t.value.trim())return;fetch('/send',{method:'POST',body:t.value})"
-            + ".then(function(){$('s').textContent='وصلت ✅';t.value=''}).catch(function(){$('s').textContent='ما وصلت، جرّب مرة ثانية'})}"
-            + "var cv=$('cv'),cx=cv.getContext('2d'),col='#ffffff',q=[],last=null,cont=false;"
-            + "['#ffffff','#f5c542','#4ade80','#f87171','#60a5fa'].forEach(function(c,i){var b=document.createElement('div');"
-            + "b.className='dot'+(i?'':' on');b.style.background=c;b.onclick=function(){col=c;"
-            + "Array.prototype.forEach.call(document.querySelectorAll('.dot'),function(x){x.className='dot'});b.className='dot on'};$('colors').appendChild(b)});"
-            + "function fit(){var r=cv.getBoundingClientRect();cv.width=r.width*2;cv.height=r.height*2}"
-            + "function pt(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]}"
-            + "function line(a,b){cx.strokeStyle=col;cx.lineWidth=6;cx.lineCap='round';cx.beginPath();"
-            + "cx.moveTo(a[0]*cv.width,a[1]*cv.height);cx.lineTo(b[0]*cv.width,b[1]*cv.height);cx.stroke()}"
-            + "cv.onpointerdown=function(e){cv.setPointerCapture(e.pointerId);last=pt(e);cont=false;q=[last]};"
-            + "cv.onpointermove=function(e){if(!last)return;var p=pt(e);line(last,p);last=p;q.push(p)};"
-            + "cv.onpointerup=cv.onpointercancel=function(){flush();last=null};"
-            + "function flush(){if(q.length<1)return;var s=(cont?'+':'')+col+' '+q.map(function(p){return p[0].toFixed(4)+','+p[1].toFixed(4)}).join(' ');"
-            + "if(last){q=[last];cont=true}else q=[];fetch('/draw',{method:'POST',body:s})}"
-            + "setInterval(function(){if(last&&q.length>1)flush()},80);"
-            + "function clr(){cx.clearRect(0,0,cv.width,cv.height);fetch('/clear',{method:'POST',body:''})}"
-            + "</script></body></html>";
+    /** The phone page, from assets/phone.html; read once. */
+    private String page;
+
+    private String page() {
+        if (page == null) {
+            try (InputStream in = getAssets().open("phone.html")) {
+                ByteArrayOutputStream b = new ByteArrayOutputStream();
+                byte[] buf = new byte[8192];
+                for (int r; (r = in.read(buf)) > 0; ) b.write(buf, 0, r);
+                page = b.toString("UTF-8");
+            } catch (Exception e) {
+                page = "<meta charset=utf-8>سكينة TV";
+            }
+        }
+        return page;
+    }
 }

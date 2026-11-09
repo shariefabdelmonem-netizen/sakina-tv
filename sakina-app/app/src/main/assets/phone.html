@@ -1,0 +1,131 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b1f18">
+<title>سكينة TV · ابعت للتلفزيون</title>
+<style>
+:root{--bg:#0b1f18;--card:#12291f;--line:#24453a;--green:#1f7a56;--gold:#e0b45a;--text:#f4efe3;--dim:#a9b8b0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:radial-gradient(120% 70% at 50% 0%,#17382b 0%,var(--bg) 60%);
+  font-family:-apple-system,system-ui,"Segoe UI",Tahoma,sans-serif;color:var(--text);display:flex;justify-content:center}
+.c{width:min(100%,560px);padding:22px 16px 40px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--green),#0f4a34);
+  display:grid;place-items:center;font-size:24px;border:1px solid #2f6b54}
+h1{font-size:21px;margin:0}header p{margin:2px 0 0;font-size:14px;color:var(--dim)}
+.tabs{display:flex;gap:6px;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:14px}
+.tabs button{flex:1;padding:12px;font-size:17px;font-weight:700;border:0;border-radius:12px;background:transparent;color:var(--dim)}
+.tabs button.on{background:var(--green);color:#fff}
+label{display:block;font-size:14px;color:var(--dim);margin:0 4px 6px}
+input,textarea{width:100%;font:inherit;font-size:19px;padding:13px 14px;border-radius:14px;border:1px solid var(--line);
+  background:var(--card);color:var(--text);outline:none}
+input:focus,textarea:focus{border-color:var(--gold)}
+textarea{height:120px;resize:none;font-size:21px}
+.name{margin-bottom:12px}
+.count{text-align:left;font-size:13px;color:var(--dim);margin:4px 6px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chips button{padding:9px 13px;font-size:16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.chips button:active{background:var(--green)}
+.send{margin-top:14px;width:100%;padding:16px;font-size:20px;font-weight:800;border:0;border-radius:16px;
+  background:linear-gradient(135deg,#25906a,var(--green));color:#fff;box-shadow:0 6px 18px #0006}
+.send:active{transform:scale(.98)}
+canvas{width:100%;aspect-ratio:16/9;background:#0e231b;border-radius:16px;border:1px solid var(--line);touch-action:none;display:block}
+.tools{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.dot{width:34px;height:34px;border-radius:50%;border:3px solid transparent;box-shadow:inset 0 0 0 1px #0004}
+.dot.on{border-color:#fff}
+.sizes{display:flex;gap:6px;margin-inline-start:auto}
+.sizes button{width:42px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center}
+.sizes button.on{border-color:var(--gold)}
+.sizes i{display:block;border-radius:50%;background:var(--text)}
+.clear{margin-top:12px;width:100%;padding:13px;font-size:17px;font-weight:700;border-radius:14px;border:1px solid #5a3434;background:#2a1717;color:#f3c9c9}
+#s{text-align:center;min-height:1.5em;margin-top:14px;font-size:16px}
+#s.ok{color:#8be0b4}#s.err{color:#f3a0a0}
+.hide{display:none}
+footer{margin-top:22px;text-align:center;font-size:13px;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="c">
+  <header>
+    <div class="logo">🌙</div>
+    <div><h1>ابعت للتلفزيون</h1><p>اكتب أو ارسم، وهيظهر على الشاشة على طول</p></div>
+  </header>
+
+  <div class="tabs">
+    <button id="bw" class="on" onclick="tab(0)">✍️ اكتب</button>
+    <button id="bd" onclick="tab(1)">🎨 ارسم</button>
+  </div>
+
+  <div id="w">
+    <div class="name">
+      <label for="n">اسمك (اختياري، بيظهر تحت الرسالة)</label>
+      <input id="n" maxlength="20" placeholder="مثلاً: بابا">
+    </div>
+    <textarea id="t" maxlength="200" placeholder="اكتب رسالتك هنا…"></textarea>
+    <div class="count"><span id="k">0</span>/200</div>
+    <div class="chips" id="chips"></div>
+    <button class="send" onclick="send()">ابعت 💌</button>
+  </div>
+
+  <div id="d" class="hide">
+    <canvas id="cv"></canvas>
+    <div class="tools">
+      <div id="colors" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <div class="sizes">
+        <button id="z1" class="on" onclick="size(1)" aria-label="خط رفيع"><i style="width:8px;height:8px"></i></button>
+        <button id="z2" onclick="size(2)" aria-label="خط تخين"><i style="width:16px;height:16px"></i></button>
+      </div>
+    </div>
+    <button class="clear" onclick="clr()">🧽 امسح الرسمة</button>
+  </div>
+
+  <div id="s"></div>
+  <footer>الرسالة بتفضل 20 ثانية، والرسمة بتختفي بعد 15 ثانية من آخر خط.<br>سكينة TV</footer>
+</div>
+<script>
+function $(i){return document.getElementById(i)}
+var st=null;
+function say(m,ok){var s=$('s');s.textContent=m;s.className=ok?'ok':'err';clearTimeout(st);st=setTimeout(function(){s.textContent=''},4000)}
+function tab(n){$('w').className=n?'hide':'';$('d').className=n?'':'hide';$('bw').className=n?'':'on';$('bd').className=n?'on':'';if(n)fit()}
+
+// Name, remembered on this phone.
+try{$('n').value=localStorage.getItem('sakina-name')||''}catch(e){}
+$('n').oninput=function(){try{localStorage.setItem('sakina-name',this.value)}catch(e){}};
+$('t').oninput=function(){$('k').textContent=this.value.length};
+
+var quick=['الأكل جاهز 🍽️','يلا نصلّي 🕌','تصبحوا على خير 🌙','بحبكم ❤️','وطّوا الصوت شوية 🔉','يلا على المذاكرة 📚','حد يجيبلي مية 💧','صلّوا على النبي ﷺ'];
+quick.forEach(function(q){var b=document.createElement('button');b.textContent=q;b.onclick=function(){post(q)};$('chips').appendChild(b)});
+
+function post(text){
+  var name=$('n').value.trim();
+  return fetch('/send',{method:'POST',body:name+'\n'+text})
+    .then(function(r){if(!r.ok)throw 0;say('وصلت للتلفزيون ✅',1);if(navigator.vibrate)navigator.vibrate(30)})
+    .catch(function(){say('ماوصلتش 😕 اتأكد إنك على واي فاي البيت وجرّب تاني')});
+}
+function send(){var t=$('t');if(!t.value.trim())return;post(t.value).then(function(){t.value='';$('k').textContent=0})}
+
+// Drawing: strokes go to the TV live, in small pieces.
+var cv=$('cv'),cx=cv.getContext('2d'),col='#ffffff',w=1,q=[],last=null,cont=false;
+['#ffffff','#e0b45a','#4ade80','#f87171','#60a5fa','#f472b6','#c084fc'].forEach(function(c,i){
+  var b=document.createElement('button');b.className='dot'+(i?'':' on');b.style.background=c;b.setAttribute('aria-label','لون');
+  b.onclick=function(){col=c;Array.prototype.forEach.call(document.querySelectorAll('.dot'),function(x){x.className='dot'});b.className='dot on'};
+  $('colors').appendChild(b)});
+function size(n){w=n;$('z1').className=n==1?'on':'';$('z2').className=n==2?'on':''}
+function fit(){var r=cv.getBoundingClientRect();cv.width=r.width*2;cv.height=r.height*2}
+function pt(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]}
+function line(a,b){cx.strokeStyle=col;cx.lineWidth=w==2?14:6;cx.lineCap='round';cx.lineJoin='round';cx.beginPath();
+  cx.moveTo(a[0]*cv.width,a[1]*cv.height);cx.lineTo(b[0]*cv.width,b[1]*cv.height);cx.stroke()}
+cv.onpointerdown=function(e){cv.setPointerCapture(e.pointerId);last=pt(e);cont=false;q=[last]};
+cv.onpointermove=function(e){if(!last)return;var p=pt(e);line(last,p);last=p;q.push(p)};
+cv.onpointerup=cv.onpointercancel=function(){flush();last=null};
+function flush(){if(q.length<1)return;
+  var s=(cont?'+':'')+col+'/'+w+' '+q.map(function(p){return p[0].toFixed(4)+','+p[1].toFixed(4)}).join(' ');
+  if(last){q=[last];cont=true}else q=[];
+  fetch('/draw',{method:'POST',body:s}).catch(function(){say('ماوصلتش 😕 اتأكد إنك على واي فاي البيت')})}
+setInterval(function(){if(last&&q.length>1)flush()},80);
+function clr(){cx.clearRect(0,0,cv.width,cv.height);fetch('/clear',{method:'POST',body:''})}
+</script>
+</body>
+</html>

@@ -24,7 +24,7 @@ class DrawLayer extends View {
     }
 
     /**
-     * One segment from the phone: "#RRGGBB x,y x,y ..." with x and y from 0 to 1. A segment that starts
+     * One segment from the phone: "#RRGGBB/brush x,y x,y ..." with x and y from 0 to 1. A segment that starts
      * with "+" continues the last stroke instead of starting a new one.
      */
     void add(String seg) {
@@ -36,13 +36,15 @@ class DrawLayer extends View {
             s = strokes.get(strokes.size() - 1);
         } else {
             s = new Stroke();
+            // "#RRGGBB" or "#RRGGBB/2": the number after the slash is the brush (1 thin, 2 thick).
+            String[] cw = parts[0].split("/");
             try {
-                s.paint.setColor(Color.parseColor(parts[0]));
+                s.paint.setColor(Color.parseColor(cw[0]));
             } catch (Exception e) {
                 s.paint.setColor(Color.WHITE);
             }
             s.paint.setStyle(Paint.Style.STROKE);
-            s.paint.setStrokeWidth(14);
+            s.paint.setStrokeWidth(cw.length > 1 && "2".equals(cw[1]) ? 30 : 14);
             s.paint.setStrokeCap(Paint.Cap.ROUND);
             s.paint.setStrokeJoin(Paint.Join.ROUND);
             s.paint.setShadowLayer(8, 0, 0, 0x99000000);
