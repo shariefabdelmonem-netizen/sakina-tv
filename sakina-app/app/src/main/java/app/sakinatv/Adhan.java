@@ -20,6 +20,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -35,7 +36,8 @@ import java.util.Locale;
 /**
  * The adhan at each prayer time for the city in gradle.properties. With the home screen up and nothing playing it plays the adhan in
  * res/raw (tools/fetch-adhan.sh) under a banner; while a film, a channel or HDMI is on it only shows the banner, so nothing is
- * cut off. Fajr is banner only: most adhan recordings lack «الصلاة خير من النوم». Only the Kahf shortcut runs it.
+ * cut off, unless sakina.adhan_stop is true: then it pauses what is on and goes home first. Fajr is banner only: most adhan
+ * recordings lack «الصلاة خير من النوم». Only the Kahf shortcut runs it.
  */
 public class Adhan extends BroadcastReceiver {
     static final String FIRE = "app.sakinatv.ADHAN";
@@ -111,9 +113,29 @@ public class Adhan extends BroadcastReceiver {
         int prayer = i.getIntExtra("p", 1);
         schedule(app);
         if (!app.getSystemService(PowerManager.class).isInteractive()) return; // TV is off
+        if (BuildConfig.ADHAN_STOP && !HOME.equals(topApp(app))) {
+            // sakina.adhan_stop: whatever is on (YouTube, a film, a channel, HDMI) is paused and left for the
+            // home screen, then the adhan plays as if the TV had been idle. Fajr stays banner only.
+            pauseAndGoHome(app);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> fire(app, prayer, prayer != 0), 2500);
+            return;
+        }
         boolean idle = prayer != 0 && HOME.equals(topApp(app))
                 && !app.getSystemService(AudioManager.class).isMusicActive();
         fire(app, prayer, idle);
+    }
+
+    /** Pauses any player (the media-pause key every app honours) and brings up the home screen. */
+    static void pauseAndGoHome(Context app) {
+        AudioManager am = app.getSystemService(AudioManager.class);
+        am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PAUSE));
+        am.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PAUSE));
+        try {
+            // Allowed from the background because this app holds the overlay permission.
+            app.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (Exception ignored) {
+        }
     }
 
     /** Banner always; the adhan itself only when play is true. */

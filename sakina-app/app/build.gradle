@@ -12,6 +12,8 @@ android {
         buildConfigField 'double', 'LAT', project.property('sakina.lat')
         buildConfigField 'double', 'LON', project.property('sakina.lon')
         buildConfigField 'int', 'METHOD', project.property('sakina.method')
+        // true: at adhan time, pause whatever is playing and go to the home screen so the adhan is heard.
+        buildConfigField 'boolean', 'ADHAN_STOP', project.findProperty('sakina.adhan_stop') ?: 'false'
         // A radio shortcut sets STREAM; the others open VIDEO on YouTube.
         buildConfigField 'String', 'STREAM', '""'
         buildConfigField 'String', 'STREAM_PLACE', '""'
